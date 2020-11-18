@@ -63,6 +63,10 @@ server <- function(input, output, session) {
     observe({
         this_ship_details <- selected_ship_inputs()
         ship_ais_data <- callModule(module = ship_path, id = "main_ship_path", ship_details = this_ship_details)
+        if (nrow(ship_ais_data) == 0) {
+            toast("There was no data avaliable for this ship.")
+            return()
+        }
         longest_ship_ais_data <- get_longest_ais_gap_data(ship_ais_data)
         ship_distance <- longest_ship_ais_data$distance[1]
         time_difference <- round(difftime(longest_ship_ais_data$DATETIME[2], longest_ship_ais_data$DATETIME[1]), 2) %>% abs

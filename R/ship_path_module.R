@@ -32,7 +32,7 @@ ship_path <- function(input, output, session, ship_details) {
     ns <- session$ns
     ship_ais_data <- get_current_ship_data(ship_details$ship_id)
     if (nrow(ship_ais_data) < 2) {
-        return()
+        return(tidyr::tibble())
     }
     output$ship_pointer_slider_ui <- renderUI({
         slider_input(ns("ship_path_pointer"), 1, 1, nrow(ship_ais_data))
