@@ -1,5 +1,4 @@
 # UI of the ship dropdowns
-
 ship_inputs_ui <- function(id) {
     ns <- NS(id)
     div(
