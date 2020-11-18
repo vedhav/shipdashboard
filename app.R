@@ -1,6 +1,7 @@
 # Loading packages
 library(shiny)
 library(shiny.semantic)
+library(shinyWidgets)
 library(tidyverse)
 library(leaflet)
 library(plotly)
@@ -39,7 +40,10 @@ ui <- semanticPage(
                         menu = div("Ship position"),
                         content = div(
                             div(class = "row centered", segment(textOutput("ship_position_desc"))),
-                            leafletOutput("ship_position_map"),
+                            addSpinner(
+                                leafletOutput("ship_position_map"),
+                                spin = "folding-cube", color = "#D4DADC"
+                            ),
                             "* This might not be the actual distance travelled by the ship"
                         )
                     ),

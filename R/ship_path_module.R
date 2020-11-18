@@ -21,9 +21,15 @@ ship_path_ui <- function(id) {
                 uiOutput(ns("ship_pointer_speed"))
             )
         ),
-        leaflet::leafletOutput(ns("ship_path_map"), height = "300px"),
+        shinyWidgets::addSpinner(
+            leaflet::leafletOutput(ns("ship_path_map"), height = "300px"),
+            spin = "folding-cube", color = "#D4DADC"
+        ),
         uiOutput(ns("ship_pointer_slider_ui"), style = "margin-left: 50px;"),
-        plotly::plotlyOutput(ns("ship_time_speed_plot"), width = "100%", height = "300px")
+        shinyWidgets::addSpinner(
+            plotly::plotlyOutput(ns("ship_time_speed_plot"), width = "100%", height = "300px")
+            spin = "folding-cube", color = "#D4DADC"
+        )
     )
 }
 
