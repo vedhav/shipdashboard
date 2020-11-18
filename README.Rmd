@@ -25,4 +25,4 @@ The goal of shipdashboard is to display a simple shiny app using the [ships data
 
 ## Demo
 
-This app is hosted in this [link]("https://vedha.tech/shipdashboard")
+This app is hosted here: [main branch](https://vedha.tech/shipdashboard), [local_data](https://vedha.tech/ship_dashboard)
