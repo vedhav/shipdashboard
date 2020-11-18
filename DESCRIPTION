@@ -1,0 +1,26 @@
+Package: shipdashboard
+Title: Ship dashboard
+Version: 0.0.0.9000
+Authors@R:
+    person(given = "Vedha",
+           family = "Viyash",
+           role = c("aut", "cre"),
+           email = "vedhaviyash4@example.com")
+Description: Ship dashboard to visualize a particular ship from the database
+License: MIT
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 7.1.0
+Imports:
+    shiny,
+    shiny.semantic,
+    tidyverse,
+    leaflet,
+    plotly,
+    dbx,
+    RMySQL,
+    geodist
+Suggests:
+    testthat,
+    knitr,
+    rmarkdown
