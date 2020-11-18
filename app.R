@@ -12,6 +12,7 @@ library(geodist)
 source("R/app_constants.R")
 source("R/database_functions.R")
 source("R/business_logic_functions.R")
+source("R/ship_dropdown_module.R")
 
 # Loading the data
 ships_data <- get_data_from_db("SELECT * FROM `ships_data`") %>% arrange(SHIPNAME)
@@ -28,8 +29,7 @@ ui <- semanticPage(
         ),
         div(
             class = "four wide column",
-            dropdown_input(input_id = "ship_type", choices = sort(ship_types_enum), value = ship_types_enum[1]), br(),
-            dropdown_input(input_id = "ship_name", choices = NULL), br(),
+            ship_inputs_ui("main_ship_input"), br(),
             uiOutput("info_ui")
         ),
         div(
@@ -79,12 +79,9 @@ ui <- semanticPage(
 
 # Server logic of the shiny app
 server <- function(input, output, session) {
-    observeEvent(input$ship_type, {
-        update_dropdown_input(session, input_id = "ship_name", choices = ships_data %>% filter(ship_type == input$ship_type) %>% pull(SHIPNAME) %>% unique)
-    })
-    observeEvent(input$ship_name, {
-        req(input$ship_name)
-        this_ship_details <- get_ship_details(ships_data, input$ship_name)
+    selected_ship_inputs <- callModule(module = ship_inputs, id = "main_ship_input", data = ships_data)
+    observe({
+        this_ship_details <- selected_ship_inputs()
         ship_ais_data <- get_current_ship_data(this_ship_details$ship_id)
         if (nrow(ship_ais_data) < 2) {
             return()
