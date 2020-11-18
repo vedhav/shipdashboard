@@ -58,7 +58,7 @@ get_current_ship_data <- function(ship_id) {
     get_data_from_db(
         "SELECT * FROM ais_data WHERE SHIP_ID = ?",
         list(ship_id)
-    ) %>% dplyr::arrange(desc(DATETIME))
+    ) %>% dplyr::arrange(dplyr::desc(DATETIME))
 }
 
 #' To filter the data with the longest distance measure between two consecutive AIS readings
