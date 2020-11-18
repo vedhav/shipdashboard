@@ -85,17 +85,11 @@ server <- function(input, output, session) {
     observeEvent(input$ship_name, {
         req(input$ship_name)
         this_ship_details <- get_ship_details(ships_data, input$ship_name)
-        ship_ais_data <- get_data_from_db(
-            "SELECT * FROM ais_data WHERE SHIP_ID = ?",
-            list(this_ship_details$ship_id)
-        ) %>% arrange(desc(DATETIME))
+        ship_ais_data <- get_current_ship_data(this_ship_details$ship_id)
         if (nrow(ship_ais_data) < 2) {
             return()
         }
-        longest_ship_ais_data <- ship_ais_data %>%
-            mutate(distance = round(c(geodist(., sequential = TRUE, measure = "geodesic"),0))) %>%
-            arrange(desc(distance), desc(DATETIME)) %>% head(2)
-        longest_ship_ais_data$position <- c("Stop", "Start")
+        longest_ship_ais_data <- get_longest_ais_gap_data(ship_ais_data)
         ship_distance <- longest_ship_ais_data$distance[1]
         time_difference <- round(difftime(longest_ship_ais_data$DATETIME[2], longest_ship_ais_data$DATETIME[1]), 2) %>% abs
         output$ship_pointer_slider_ui <- renderUI({

@@ -1,4 +1,3 @@
-library(tidyverse)
 library(testthat)
 source("../../R/app_constants.R")
 context("Checking format_ship_type")

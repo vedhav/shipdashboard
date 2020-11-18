@@ -48,3 +48,30 @@ format_ship_type <- function(ship_type, suffix = "", file_extension = "png") {
         paste0(suffix, ".", file_extension)
     return(file_name)
 }
+
+#' To filter the current ship's data from the whole dataset
+#'
+#' @param ship_id A number with the ship's id
+#'
+#' @return A tibble with only this ship's data
+get_current_ship_data <- function(ship_id) {
+    get_data_from_db(
+        "SELECT * FROM ais_data WHERE SHIP_ID = ?",
+        list(ship_id)
+    ) %>% dplyr::arrange(desc(DATETIME))
+}
+
+#' To filter the data with the longest distance measure between two consecutive AIS readings
+#'
+#' @param current_ship_data A tbl_df/tbl/data.frame with a particular ship's AIS data
+#' @param geo_measure An optional string argument to set accuracy for the geo distance calculation. Can be "haversine" "vincenty", "geodesic", or "cheap"
+#' @param round_accu An integer to specify the rounding digits accuracy
+#'
+#' @return A tibble with two consecutive rows of AIS data with the most distance travelled
+get_longest_ais_gap_data <- function(current_ship_data, geo_measure = "geodesic", round_accu = 0) {
+    longest_ais_gap_data <- current_ship_data %>%
+        dplyr::mutate(distance = round(c(geodist::geodist(., sequential = TRUE, measure = geo_measure), round_accu))) %>%
+        dplyr::arrange(dplyr::desc(distance), dplyr::desc(DATETIME)) %>% head(2)
+    longest_ais_gap_data$position <- c("Stop", "Start")
+    return(longest_ais_gap_data)
+}
