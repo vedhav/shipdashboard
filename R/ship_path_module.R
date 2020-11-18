@@ -21,9 +21,9 @@ ship_path_ui <- function(id) {
                 uiOutput(ns("ship_pointer_speed"))
             )
         ),
-        leafletOutput(ns("ship_path_map"), height = "300px"),
+        leaflet::leafletOutput(ns("ship_path_map"), height = "300px"),
         uiOutput(ns("ship_pointer_slider_ui"), style = "margin-left: 50px;"),
-        plotlyOutput(ns("ship_time_speed_plot"), width = "100%", height = "300px")
+        plotly::plotlyOutput(ns("ship_time_speed_plot"), width = "100%", height = "300px")
     )
 }
 
@@ -35,45 +35,45 @@ ship_path <- function(input, output, session, ship_details) {
         return(tidyr::tibble())
     }
     output$ship_pointer_slider_ui <- renderUI({
-        slider_input(ns("ship_path_pointer"), 1, 1, nrow(ship_ais_data))
+        shiny.semantic::slider_input(ns("ship_path_pointer"), 1, 1, nrow(ship_ais_data))
     })
     output$ship_time_speed_plot <- renderPlotly({
-        plot_ly(
-            ship_ais_data %>% arrange(DATETIME),
+        plotly::plot_ly(
+            ship_ais_data %>% dplyr::arrange(DATETIME),
             x = ~DATETIME, y = ~SPEED, line = list(color = "#8a8a8a"),
             type = "scatter", mode = "lines"
         ) %>%
-        layout(xaxis = list(title = "Date time", showgrid = FALSE), yaxis = list(title = "Speed (knots)", showgrid = FALSE)) %>%
+        plotly::layout(xaxis = list(title = "Date time", showgrid = FALSE), yaxis = list(title = "Speed (knots)", showgrid = FALSE)) %>%
         config(displayModeBar = FALSE)
     })
     output$ship_path_map <- renderLeaflet({
         if (nrow(ship_ais_data) == 0) {
-            toast("There was no data for this particular ship")
+            shiny.semantic::toast("There was no data for this particular ship")
             return()
         }
-        leaflet(ship_ais_data, options = leafletOptions(attributionControl = FALSE)) %>%
-            addProviderTiles("CartoDB.PositronNoLabels") %>%
-            addPolylines(lng = ~LON, lat = ~LAT, weight = 2, color = "#7f7f7f",)
+        leaflet::leaflet(ship_ais_data, options = leaflet::leafletOptions(attributionControl = FALSE)) %>%
+            leaflet::addProviderTiles("CartoDB.PositronNoLabels") %>%
+            leaflet::addPolylines(lng = ~LON, lat = ~LAT, weight = 2, color = "#7f7f7f",)
     })
     observeEvent(input$ship_path_pointer, {
         ship_pointer_data <- ship_ais_data[nrow(ship_ais_data) - input$ship_path_pointer + 1,]
-        leafletProxy("ship_path_map", data = ship_pointer_data) %>%
-            clearMarkers() %>%
-            addMarkers(
+        leaflet::leafletProxy("ship_path_map", data = ship_pointer_data) %>%
+            leaflet::clearMarkers() %>%
+            leaflet::addMarkers(
                 lng = ~LON, lat = ~LAT,
-                icon = makeIcon(
+                icon = leaflet::makeIcon(
                     format_ship_type(ship_details$ship_type),
                     iconWidth = 50, iconAnchorX = 20, iconAnchorY = 25
                 )
             )
         output$ship_pointer_date <- renderUI({
-            HTML(paste0(tags$b("Date: "), ship_pointer_data$DATETIME %>% format("%d-%m-%Y")))
+            htmltools::HTML(paste0(tags$b("Date: "), ship_pointer_data$DATETIME %>% format("%d-%m-%Y")))
         })
         output$ship_pointer_time <- renderUI({
-            HTML(paste0(tags$b("Time: "), ship_pointer_data$DATETIME %>% format("%H:%M:%S")))
+            htmltools::HTML(paste0(tags$b("Time: "), ship_pointer_data$DATETIME %>% format("%H:%M:%S")))
         })
         output$ship_pointer_speed <- renderUI({
-            HTML(paste0(tags$b("Speed: "), ship_pointer_data$SPEED, " knots"))
+            htmltools::HTML(paste0(tags$b("Speed: "), ship_pointer_data$SPEED, " knots"))
         })
     })
     return(ship_ais_data)

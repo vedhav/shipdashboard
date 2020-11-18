@@ -86,9 +86,21 @@ server <- function(input, output, session) {
                     class = "content",
                     tags$b("Ship ID: "), this_ship_details$ship_id, tags$br(),
                     tags$b("Flag: "), this_ship_details$flag, tags$br(),
-                    tags$b("Length: "), this_ship_details$length, " m", tags$br(),
-                    tags$b("Width: "), this_ship_details$width, " m", tags$br(),
-                    tags$b("Deadweight Tonnage: "), this_ship_details$dead_weight, " tons", tags$br()
+                    tags$b("Length: "),
+                    ifelse(
+                        is.na(this_ship_details$length), "Not avaliable",
+                        paste0(this_ship_details$length, " m")
+                    ), tags$br(),
+                    tags$b("Width: "),
+                    ifelse(
+                        is.na(this_ship_details$width), "Not avaliable",
+                        paste0(this_ship_details$width, " m")
+                    ), tags$br(),
+                    tags$b("Deadweight Tonnage: "),
+                    ifelse(
+                        is.na(this_ship_details$dead_weight), "Not available",
+                        paste0(this_ship_details$dead_weight, " tons")
+                    ), tags$br()
                 )
             )
         })

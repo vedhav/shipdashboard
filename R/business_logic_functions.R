@@ -64,7 +64,8 @@ get_current_ship_data <- function(ship_id) {
 #' To filter the data with the longest distance measure between two consecutive AIS readings
 #'
 #' @param current_ship_data A tbl_df/tbl/data.frame with a particular ship's AIS data
-#' @param geo_measure An optional string argument to set accuracy for the geo distance calculation. Can be "haversine" "vincenty", "geodesic", or "cheap"
+#' @param geo_measure An optional string argument to set accuracy for the geo distance calculation.
+#' Can be "haversine" "vincenty", "geodesic", or "cheap"
 #' @param round_accu An integer to specify the rounding digits accuracy
 #'
 #' @return A tibble with two consecutive rows of AIS data with the most distance travelled

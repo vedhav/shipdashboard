@@ -19,7 +19,8 @@ Imports:
     plotly,
     dbx,
     RMySQL,
-    geodist
+    geodist,
+    data.table
 Suggests:
     testthat,
     knitr,

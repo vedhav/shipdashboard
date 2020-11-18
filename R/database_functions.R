@@ -1,8 +1,8 @@
 # Kills all the unclosed db connections that occur due to exceptions or timeouts
 kill_dbx_connections <- function () {
-    all_cons <- dbListConnections(MySQL())
+    all_cons <- dbListConnections(RMySQL::MySQL())
     for(con in all_cons)
-        dbxDisconnect(con)
+        dbx::dbxDisconnect(con)
     print(paste(length(all_cons), " connections killed."))
     print("If you have not set up the MySQL database please swith to local_file branch of the repo { git checkout local_file } so you can use this app without it")
 }
@@ -26,7 +26,7 @@ insert_into_db <- function(table_name, values, db_name = default_db_name, host_n
         }
     }
     conn <- tryCatch({
-        dbxConnect(
+        dbx::dbxConnect(
             adapter = "mysql",
             user = host_name,
             password = host_password,
@@ -36,7 +36,7 @@ insert_into_db <- function(table_name, values, db_name = default_db_name, host_n
         )
     }, error = function(err) {
         kill_dbx_connections()
-        dbxConnect(
+        dbx::dbxConnect(
             adapter = "mysql",
             user = host_name,
             password = host_password,
@@ -45,8 +45,8 @@ insert_into_db <- function(table_name, values, db_name = default_db_name, host_n
             dbname = db_name
         )
     })
-    result <- suppressWarnings(dbxInsert(conn, table_name, values, batch_size = 1000))
-    on.exit(dbxDisconnect(conn))
+    result <- suppressWarnings(dbx::dbxInsert(conn, table_name, values, batch_size = 1000))
+    on.exit(dbx::dbxDisconnect(conn))
     return(result)
 }
 
@@ -62,11 +62,11 @@ insert_into_db <- function(table_name, values, db_name = default_db_name, host_n
 #' @return A tibble which is the result of the query
 get_data_from_db <- function(query, params = NULL, db_name = default_db_name, host_name = default_host_name,
     host_password = default_host_password, host_ip = default_host_ip) {
-    if(query =="") {
-        return(data.frame())
+    if(query == "") {
+        stop("The query string cannot be empty")
     }
     conn <- tryCatch({
-        dbxConnect(
+        dbx::dbxConnect(
             adapter = "mysql",
             user = host_name,
             password = host_password,
@@ -76,7 +76,7 @@ get_data_from_db <- function(query, params = NULL, db_name = default_db_name, ho
         )
     }, error = function(err) {
         kill_dbx_connections()
-        dbxConnect(
+        dbx::dbxConnect(
             adapter = "mysql",
             user = host_name,
             password = host_password,
@@ -95,14 +95,14 @@ get_data_from_db <- function(query, params = NULL, db_name = default_db_name, ho
                 params[[field]] <- gsub("[\\]", "\\\\\\\\", params[[field]])
             }
         }
-        result <- suppressWarnings(dbxSelect(conn, query, params))
+        result <- suppressWarnings(dbx::dbxSelect(conn, query, params))
     } else {
-        result <- suppressWarnings(dbxSelect(conn, query))
+        result <- suppressWarnings(dbx::dbxSelect(conn, query))
     }
     #To remove the unnecessary results that we get from executing a stored procedure
     while(RMySQL::dbMoreResults(conn)) {
         try(RMySQL::dbNextResult(conn))
     }
-    on.exit(dbxDisconnect(conn))
+    on.exit(dbx::dbxDisconnect(conn))
     return(tibble::as_tibble(result))
 }
