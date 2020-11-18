@@ -1,3 +1,4 @@
+# UI of the ship path
 ship_path_ui <- function(id) {
     ns <- NS(id)
     div(
@@ -26,6 +27,7 @@ ship_path_ui <- function(id) {
     )
 }
 
+# Server logic for the ship path module
 ship_path <- function(input, output, session, ship_details) {
     ns <- session$ns
     ship_ais_data <- get_current_ship_data(ship_details$ship_id)
