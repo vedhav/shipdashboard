@@ -51,14 +51,12 @@ format_ship_type <- function(ship_type, suffix = "", file_extension = "png") {
 
 #' To filter the current ship's data from the whole dataset
 #'
+#' @param ais_data A tbl_df/tbl/data.frame with the ais related ships data
 #' @param ship_id A number with the ship's id
 #'
 #' @return A tibble with only this ship's data
-get_current_ship_data <- function(ship_id) {
-    get_data_from_db(
-        "SELECT * FROM ais_data WHERE SHIP_ID = ?",
-        list(ship_id)
-    ) %>% dplyr::arrange(desc(DATETIME))
+get_current_ship_data <- function(ais_data, ship_id) {
+    ais_data %>% filter(SHIP_ID == ship_id) %>% dplyr::arrange(dplyr::desc(DATETIME))
 }
 
 #' To filter the data with the longest distance measure between two consecutive AIS readings

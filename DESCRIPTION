@@ -17,10 +17,7 @@ Imports:
     tidyverse,
     leaflet,
     plotly,
-    dbx,
-    RMySQL,
-    geodist,
-    data.table
+    geodist
 Suggests:
     testthat,
     knitr,

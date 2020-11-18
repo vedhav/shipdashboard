@@ -4,19 +4,17 @@ library(shiny.semantic)
 library(tidyverse)
 library(leaflet)
 library(plotly)
-library(dbx)
-library(RMySQL)
 library(geodist)
 
 # Sourcing the required R constants, functions and modules
 source("R/app_constants.R")
-source("R/database_functions.R")
 source("R/business_logic_functions.R")
 source("R/ship_dropdown_module.R")
 source("R/ship_path_module.R")
 
 # Loading the data
-ships_data <- get_data_from_db("SELECT * FROM `ships_data`") %>% arrange(SHIPNAME)
+ships_data <- readRDS("data/ships_data.RDS") %>% arrange(SHIPNAME)
+ais_data <<- readRDS("data/ais_data.RDS")
 
 # UI of the shiny app
 ui <- semanticPage(

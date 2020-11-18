@@ -4,9 +4,11 @@
 \alias{get_current_ship_data}
 \title{To filter the current ship's data from the whole dataset}
 \usage{
-get_current_ship_data(ship_id)
+get_current_ship_data(ais_data, ship_id)
 }
 \arguments{
+\item{ais_data}{A tbl_df/tbl/data.frame with the ais related ships data}
+
 \item{ship_id}{A number with the ship's id}
 }
 \value{

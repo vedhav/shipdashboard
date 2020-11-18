@@ -13,7 +13,8 @@ get_longest_ais_gap_data(
 \arguments{
 \item{current_ship_data}{A tbl_df/tbl/data.frame with a particular ship's AIS data}
 
-\item{geo_measure}{An optional string argument to set accuracy for the geo distance calculation. Can be "haversine" "vincenty", "geodesic", or "cheap"}
+\item{geo_measure}{An optional string argument to set accuracy for the geo distance calculation.
+Can be "haversine" "vincenty", "geodesic", or "cheap"}
 
 \item{round_accu}{An integer to specify the rounding digits accuracy}
 }
