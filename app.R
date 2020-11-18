@@ -13,6 +13,7 @@ source("R/app_constants.R")
 source("R/database_functions.R")
 source("R/business_logic_functions.R")
 source("R/ship_dropdown_module.R")
+source("R/ship_path_module.R")
 
 # Loading the data
 ships_data <- get_data_from_db("SELECT * FROM `ships_data`") %>% arrange(SHIPNAME)
